@@ -60,15 +60,21 @@ html {
     padding-bottom: 10px;
 }
 
+.dress-up-section p {
+    margin: 5px 0;
+    color: #ccc;
+    font-size: 0.9rem;
+}
+
 .character-select {
     display: flex;
     justify-content: space-around;
-    padding: 10px 0;
+    padding: 5px 0 10px 0;
 }
 
 .char-option {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     border: 3px solid transparent;
     cursor: pointer;
@@ -79,7 +85,7 @@ html {
 .char-option.selected {
     transform: scale(1.15);
     border-color: #fff;
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
 }
 
 button {

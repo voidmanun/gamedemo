@@ -18,7 +18,8 @@ const skills = [
 
 let gameState = {
     phase: 'start', // 'start', 'playing', 'gameover'
-    playerColor: '#E53935',
+    playerHairColor: '#1E1E1E',
+    playerDressColor: '#E91E63',
     playerSkill: null,
     lastTime: 0,
     keys: {},
@@ -43,12 +44,23 @@ const messageOverlay = document.getElementById('message-overlay');
 const endTitle = document.getElementById('end-title');
 const restartBtn = document.getElementById('restart-btn');
 
+const hairOptions = document.querySelectorAll('#hair-select .char-option');
+const dressOptions = document.querySelectorAll('#dress-select .char-option');
+
 // --- UI Logic ---
-charOptions.forEach(opt => {
+hairOptions.forEach(opt => {
     opt.addEventListener('click', () => {
-        charOptions.forEach(o => o.classList.remove('selected'));
+        hairOptions.forEach(o => o.classList.remove('selected'));
         opt.classList.add('selected');
-        gameState.playerColor = opt.dataset.color;
+        gameState.playerHairColor = opt.dataset.color;
+    });
+});
+
+dressOptions.forEach(opt => {
+    opt.addEventListener('click', () => {
+        dressOptions.forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        gameState.playerDressColor = opt.dataset.color;
     });
 });
 
@@ -80,10 +92,11 @@ restartBtn.addEventListener('click', () => {
 // --- Game Engine ---
 
 class Player {
-    constructor(x, y, color, skill) {
+    constructor(x, y, hairColor, dressColor, skill) {
         this.x = x;
         this.y = y;
-        this.color = color;
+        this.hairColor = hairColor;
+        this.dressColor = dressColor;
         this.skill = skill;
         this.vx = 0;
         this.vy = 0;
@@ -157,19 +170,57 @@ class Player {
             ctx.globalAlpha = 0.5;
         }
 
-        // Body
+        // Calculate rotation based on facing direction
+        const angle = Math.atan2(this.facing.y, this.facing.x);
+        ctx.rotate(angle);
+
+        // Draw Hair (Back layer)
         ctx.beginPath();
-        ctx.arc(0, 0, config.playerRadius, 0, Math.PI * 2);
-        ctx.fillStyle = this.color;
+        // A simple blob shape for flowing hair
+        ctx.ellipse(-5, 0, 15, 12, 0, 0, Math.PI * 2);
+        ctx.fillStyle = this.hairColor;
         ctx.fill();
-        ctx.lineWidth = 2;
+
+        // Draw Dress (Body)
+        ctx.beginPath();
+        // A curved triangular/bell shape pointing right (facing direction)
+        ctx.moveTo(0, 0); // Neck area
+        ctx.lineTo(-12, -15); // Bottom corner
+        ctx.quadraticCurveTo(-15, 0, -12, 15); // Bottom curvy edge
+        ctx.closePath();
+        ctx.fillStyle = this.dressColor;
+        ctx.fill();
+        ctx.lineWidth = 1.5;
         ctx.strokeStyle = '#fff';
         ctx.stroke();
 
-        // Direction indicator (eye/nose)
+        // Draw Head
         ctx.beginPath();
-        ctx.arc(this.facing.x * 8, this.facing.y * 8, 4, 0, Math.PI * 2);
-        ctx.fillStyle = '#fff';
+        ctx.arc(0, 0, 10, 0, Math.PI * 2);
+        ctx.fillStyle = '#FFE0BD'; // Skin color
+        ctx.fill();
+        ctx.stroke();
+
+        // Draw Eyes (Facing Right)
+        ctx.beginPath();
+        ctx.fillStyle = '#333';
+        ctx.arc(3, -4, 2, 0, Math.PI * 2); // Left eye
+        ctx.arc(3, 4, 2, 0, Math.PI * 2);  // Right eye
+        ctx.fill();
+
+        // Draw Blush
+        ctx.beginPath();
+        ctx.fillStyle = 'rgba(255, 105, 180, 0.5)'; // Pink blush
+        ctx.arc(-1, -6, 2.5, 0, Math.PI * 2);
+        ctx.arc(-1, 6, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Draw Hair (Front Bangs)
+        ctx.beginPath();
+        ctx.arc(0, 0, 10, -Math.PI / 2 - 0.5, Math.PI / 2 + 0.5); // Cover part of the head
+        ctx.lineTo(-5, 0); // Come back a bit
+        ctx.closePath();
+        ctx.fillStyle = this.hairColor;
         ctx.fill();
 
         ctx.restore();
@@ -395,7 +446,7 @@ function generateForest() {
 
 function initGame() {
     gameState.phase = 'playing';
-    player = new Player(config.worldWidth / 2, config.worldHeight / 2, gameState.playerColor, gameState.playerSkill);
+    player = new Player(config.worldWidth / 2, config.worldHeight / 2, gameState.playerHairColor, gameState.playerDressColor, gameState.playerSkill);
 
     // Reset buttons
     actionBtn.classList.remove('on-cooldown');
