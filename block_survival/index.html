@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Block World Survival</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="game-canvas"></canvas>
+        <div id="ui-layer">
+            <div id="hud-top">
+                <div id="health-bar"><div id="health-fill"></div></div>
+                <div id="inventory">Wood: <span id="wood-count">0</span></div>
+            </div>
+            
+            <div id="crafting-menu">
+                <button id="craft-sword-btn" class="craft-btn">Craft Sword (5 Wood)</button>
+            </div>
+
+            <!-- Mobile Controls -->
+            <div id="joystick-zone">
+                <div id="joystick-base">
+                    <div id="joystick-stick"></div>
+                </div>
+            </div>
+            
+            <div id="action-zone">
+                <button id="action-btn" class="control-btn">Mine/Attack</button>
+            </div>
+        </div>
+        <div id="game-over-screen" class="hidden">
+            <h1>Game Over</h1>
+            <p>You survived for a while.</p>
+            <button id="restart-btn">Restart Game</button>
+        </div>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html>

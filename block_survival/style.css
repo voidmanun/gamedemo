@@ -1,0 +1,222 @@
+/* Reset & Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none; /* Prevent text selection on mobile taps */
+    -webkit-user-select: none;
+    touch-action: none; /* Prevent default browser behaviors like zooming */
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #000;
+    font-family: 'Courier New', Courier, monospace; /* Pixel-ish font */
+}
+
+#game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    /* Pixel art scaling */
+    image-rendering: optimizeSpeed;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: optimize-contrast;
+    image-rendering: pixelated;
+    -ms-interpolation-mode: nearest-neighbor;
+}
+
+/* UI Layer */
+#ui-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Let touches pass through where there are no UI elements */
+}
+
+#hud-top {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    pointer-events: auto;
+}
+
+#health-bar {
+    width: 150px;
+    height: 20px;
+    background-color: #333;
+    border: 2px solid #fff;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+#health-fill {
+    width: 100%;
+    height: 100%;
+    background-color: #e74c3c;
+    transition: width 0.2s ease;
+}
+
+#inventory {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 16px;
+    border: 2px solid #fff;
+}
+
+#crafting-menu {
+    position: absolute;
+    top: 50px;
+    right: 10px;
+    pointer-events: auto;
+}
+
+.craft-btn {
+    background-color: #8e44ad;
+    color: white;
+    border: 2px solid #fff;
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+    box-shadow: 0 4px #5e2874;
+}
+
+.craft-btn:active {
+    box-shadow: 0 0 transparent;
+    transform: translateY(4px);
+}
+
+.craft-btn:disabled {
+    background-color: #6c7a89;
+    box-shadow: 0 4px #34495e;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Joystick Area */
+#joystick-zone {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50vw;
+    height: 50vh;
+    pointer-events: auto;
+    /* Visual debug, usually transparent */
+    /* background: rgba(255,0,0,0.1); */
+}
+
+#joystick-base {
+    position: absolute;
+    bottom: 40px;
+    left: 40px;
+    width: 120px;
+    height: 120px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    display: none; /* Only show when touched */
+}
+
+#joystick-stick {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60px;
+    height: 60px;
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    transform: translate(-50%, -50%); /* Center the stick */
+}
+
+/* Action Area */
+#action-zone {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 50vw;
+    height: 50vh;
+    pointer-events: none; /* Let touches hit the button specifically */
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.control-btn {
+    width: 80px;
+    height: 80px;
+    margin: 20px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.3);
+    border: 3px solid rgba(255, 255, 255, 0.7);
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    pointer-events: auto; /* Re-enable pointer events for the button */
+    touch-action: manipulation;
+}
+
+.control-btn:active {
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+/* Game Over Screen */
+#game-over-screen {
+    position: absolute;
+    inset: 0;
+    background: rgba(192, 57, 43, 0.8);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    z-index: 100;
+    pointer-events: auto;
+}
+
+#game-over-screen.hidden {
+    display: none;
+}
+
+#game-over-screen h1 {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+#game-over-screen p {
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+#restart-btn {
+    background: white;
+    color: #c0392b;
+    border: none;
+    padding: 15px 30px;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+#restart-btn:active {
+    transform: scale(0.95);
+}
