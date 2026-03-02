@@ -21,10 +21,8 @@ let player = {
     color: '#3498db'
 };
 
-let baseRadius = 15;
+let baseRadius = 10;
 let playerRadius;
-
-let monsters = [];
 
 let basePathWidth = 30;
 let PATH_WIDTH = 0;
@@ -48,21 +46,33 @@ window.addEventListener('resize', () => {
 
 function initGame() {
     // scale widths relative to screen width, but keep reasonable bounds
-    basePathWidth = Math.max(50, Math.min(85, width * 0.16));
+    basePathWidth = Math.max(30, Math.min(55, width * 0.12));
 
     PATH_WIDTH = basePathWidth * dpr;
-    BORDER_WIDTH = PATH_WIDTH + 20 * dpr; // 10px border each side physically
+    BORDER_WIDTH = PATH_WIDTH + 15 * dpr; // 7.5px border each side physically
 
     // Player physical radius
     playerRadius = baseRadius * dpr;
     SAFE_WIDTH = PATH_WIDTH - playerRadius * 1.5; // slight tolerance
 
-    // S-shape path from bottom right to top left (logical coords)
+    // Super complex winding path
     originalPathPoints = [
-        { x: width * 0.8, y: height * 0.85 },
-        { x: width * 0.8, y: height * 0.70 },
-        { x: width * 0.2, y: height * 0.55 },
-        { x: width * 0.2, y: height * 0.35 },
+        { x: width * 0.8, y: height * 0.92 },
+        { x: width * 0.8, y: height * 0.83 },
+        { x: width * 0.2, y: height * 0.83 },
+        { x: width * 0.2, y: height * 0.74 },
+        { x: width * 0.8, y: height * 0.74 },
+        { x: width * 0.8, y: height * 0.65 },
+        { x: width * 0.4, y: height * 0.65 },
+        { x: width * 0.4, y: height * 0.56 },
+        { x: width * 0.2, y: height * 0.56 },
+        { x: width * 0.2, y: height * 0.47 },
+        { x: width * 0.8, y: height * 0.47 },
+        { x: width * 0.8, y: height * 0.38 },
+        { x: width * 0.5, y: height * 0.38 },
+        { x: width * 0.5, y: height * 0.29 },
+        { x: width * 0.2, y: height * 0.29 },
+        { x: width * 0.2, y: height * 0.20 },
         { x: width * 0.8, y: height * 0.20 },
         { x: width * 0.8, y: height * 0.10 },
     ];
@@ -82,11 +92,6 @@ function initGame() {
     }
 
     resetPlayer();
-
-    monsters = [
-        { p1: 1, p2: 2, t: 0, speed: 0.012, dir: 1, radius: 11 * dpr, color: '#8e44ad' },
-        { p1: 3, p2: 4, t: 0.5, speed: 0.018, dir: -1, radius: 11 * dpr, color: '#8e44ad' }
-    ];
 
     draw();
 }
@@ -142,22 +147,6 @@ function draw() {
     ctx.fillStyle = '#2c3e50';
     ctx.fillText('End', pathPoints[pathPoints.length - 1].x, pathPoints[pathPoints.length - 1].y);
 
-    // Draw Monsters
-    monsters.forEach(m => {
-        // calc pos
-        m.x = pathPoints[m.p1].x + (pathPoints[m.p2].x - pathPoints[m.p1].x) * m.t;
-        m.y = pathPoints[m.p1].y + (pathPoints[m.p2].y - pathPoints[m.p1].y) * m.t;
-
-        ctx.beginPath();
-        ctx.arc(m.x, m.y, m.radius, 0, Math.PI * 2);
-        ctx.fillStyle = m.color;
-        ctx.fill();
-        ctx.lineWidth = 2 * dpr;
-        ctx.strokeStyle = '#fff';
-        ctx.stroke();
-        ctx.closePath();
-    });
-
     // Draw Player
     ctx.beginPath();
     ctx.arc(player.x, player.y, playerRadius, 0, Math.PI * 2);
@@ -179,23 +168,6 @@ function update(time) {
     let dt = lastTime ? (time - lastTime) : 16;
     if (dt > 100) dt = 16;
     lastTime = time;
-
-    // Update monsters
-    monsters.forEach(m => {
-        let speedMult = dt / 16.66;
-        m.t += m.speed * m.dir * speedMult;
-        if (m.t >= 1) { m.t = 1; m.dir = -1; }
-        if (m.t <= 0) { m.t = 0; m.dir = 1; }
-    });
-
-    // Check monster collisions
-    for (let m of monsters) {
-        const dist = Math.hypot(player.x - m.x, player.y - m.y);
-        if (dist < playerRadius + m.radius - 2 * dpr) {
-            die('你碰到了紫色怪物！');
-            return;
-        }
-    }
 
     // Check win condition (reached end area)
     const endPoint = pathPoints[pathPoints.length - 1];
