@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>涂鸦赛车跑酷 (Doodle Racing)</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Permanent+Marker&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- 游戏主画布 -->
+        <canvas id="game-canvas"></canvas>
+
+        <!-- 主菜单 UI -->
+        <div id="main-menu" class="ui-panel">
+            <h1 class="game-title">Doodle Racing</h1>
+
+            <div class="selection-area">
+                <h2>选择载具</h2>
+                <div class="vehicle-options">
+                    <div class="vehicle-btn active" data-vehicle="car">🚗 汽车</div>
+                    <div class="vehicle-btn" data-vehicle="bike">🚲 越野单车</div>
+                    <div class="vehicle-btn" data-vehicle="ufo">🛸 飞船</div>
+                    <div class="vehicle-btn" data-vehicle="rabbit">🐰 兔子</div>
+                </div>
+
+                <h2>角色颜色换装</h2>
+                <div class="color-options">
+                    <div class="color-btn active" data-color="#3498db" style="background-color: #3498db;"></div>
+                    <div class="color-btn" data-color="#e74c3c" style="background-color: #e74c3c;"></div>
+                    <div class="color-btn" data-color="#f1c40f" style="background-color: #f1c40f;"></div>
+                    <div class="color-btn" data-color="#2ecc71" style="background-color: #2ecc71;"></div>
+                    <div class="color-btn" data-color="#9b59b6" style="background-color: #9b59b6;"></div>
+                </div>
+            </div>
+
+            <button id="start-btn" class="action-btn">开始奔跑！</button>
+            <div class="sketch-decorations">
+                <span class="decor star-decor">⭐</span>
+                <span class="decor circle-decor">🔘</span>
+                <span class="decor triangle-decor">△</span>
+            </div>
+        </div>
+
+        <!-- 游戏结束 UI -->
+        <div id="game-over-panel" class="ui-panel hidden">
+            <h1 class="game-over-title">撞毁啦!</h1>
+            <div class="score-display">
+                <p>得分: <span id="final-score">0</span></p>
+                <p>最高分: <span id="best-score">0</span></p>
+            </div>
+            <button id="restart-btn" class="action-btn">重新开始</button>
+            <button id="menu-btn" class="action-btn secondary">返回菜单</button>
+        </div>
+
+        <!-- 游戏内 HUD -->
+        <div id="hud" class="hidden">
+            <div class="score-hud">分数: <span id="current-score">0</span></div>
+            <!-- 触控提示区域 (可选) -->
+            <div class="touch-zones">
+                <div class="touch-zone left"></div>
+                <div class="touch-zone right"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+
+</html>
