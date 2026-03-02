@@ -1,0 +1,298 @@
+* {
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #1a1a1a;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #fff;
+}
+
+#start-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #2E7D32, #1b5e20);
+    padding: 20px;
+    z-index: 10;
+    overflow-y: auto;
+}
+
+.title {
+    font-size: 2.5rem;
+    color: #FFD54F;
+    text-shadow: 2px 4px 6px rgba(0, 0, 0, 0.4);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.step-card {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.step-card h2 {
+    font-size: 1.2rem;
+    margin-top: 0;
+    color: #81C784;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+}
+
+.character-select {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+}
+
+.char-option {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.char-option.selected {
+    transform: scale(1.15);
+    border-color: #fff;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+}
+
+button {
+    background-color: #FFB300;
+    color: #3e2723;
+    border: none;
+    border-radius: 25px;
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #F57F17;
+    transition: transform 0.1s;
+    width: 80%;
+}
+
+button:active {
+    transform: translateY(4px);
+    box-shadow: 0 0 0 #F57F17;
+}
+
+button:disabled {
+    background-color: #555;
+    color: #888;
+    box-shadow: 0 4px 0 #333;
+    cursor: not-allowed;
+}
+
+#skill-result {
+    margin-top: 15px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    animation: popIn 0.3s ease-out;
+}
+
+#skill-name {
+    color: #e91e63;
+    font-size: 1.5rem;
+    margin: 5px 0;
+    text-shadow: 0 0 8px rgba(233, 30, 99, 0.5);
+}
+
+#skill-desc {
+    font-size: 0.9rem;
+    color: #ccc;
+    margin: 0;
+}
+
+.hint {
+    font-size: 0.85rem;
+    color: #aaa;
+    margin-top: 15px;
+    line-height: 1.4;
+}
+
+.hidden {
+    display: none !important;
+}
+
+@keyframes popIn {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Game Screen */
+#game-screen {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+#ui-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    /* Let clicks pass to canvas if needed, except button areas */
+}
+
+#health-bar {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 1.2rem;
+}
+
+#message-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+    z-index: 20;
+}
+
+#end-title {
+    font-size: 3rem;
+    color: #f44336;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px rgba(244, 67, 54, 0.5);
+}
+
+/* Mobile Controls */
+#mobile-controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 150px;
+    pointer-events: none;
+}
+
+#joystick-zone {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    width: 120px;
+    height: 120px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    pointer-events: auto;
+    touch-action: none;
+}
+
+#joystick-base {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+#joystick-stick {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+#action-btn {
+    position: absolute;
+    bottom: 40px;
+    right: 20px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(233, 30, 99, 0.8);
+    border: 3px solid rgba(255, 255, 255, 0.5);
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+#action-btn:active {
+    background: rgba(233, 30, 99, 1);
+    transform: scale(0.95);
+}
+
+#action-btn.on-cooldown {
+    background: rgba(100, 100, 100, 0.8);
+    pointer-events: none;
+}
+
+/* Desktop hint */
+@media (min-width: 768px) {
+    #mobile-controls::before {
+        content: "移动：WASD/方向键  技能：空格键";
+        position: absolute;
+        top: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.9rem;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 5px 10px;
+        border-radius: 10px;
+    }
+}

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>妞妞的游戏</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="start-screen">
+        <h1 class="title">生命找宝物</h1>
+
+        <div class="step-card">
+            <h2>第一步：选择角色</h2>
+            <div class="character-select">
+                <div class="char-option selected" data-color="#E53935" style="background-color: #E53935;"></div>
+                <div class="char-option" data-color="#1E88E5" style="background-color: #1E88E5;"></div>
+                <div class="char-option" data-color="#43A047" style="background-color: #43A047;"></div>
+                <div class="char-option" data-color="#FDD835" style="background-color: #FDD835;"></div>
+            </div>
+            <p>猎人装扮</p>
+        </div>
+
+        <div class="step-card">
+            <h2>第二步：抽取技能</h2>
+            <button id="draw-skill-btn">抽自己的技能</button>
+            <div id="skill-result" class="hidden">
+                <p>你的技能是：</p>
+                <h3 id="skill-name">???</h3>
+                <p id="skill-desc"></p>
+            </div>
+        </div>
+
+        <div class="step-card">
+            <h2>第三步：开始游戏</h2>
+            <button id="start-btn" disabled>开始游戏</button>
+            <p class="hint">规则：在森林中寻找<span style="color:#00BFFF;font-weight:bold;">海蓝珠</span>。躲避野兽（龙、跑），被吃掉就死了！猎人打死你也会死！
+            </p>
+        </div>
+    </div>
+
+    <div id="game-screen" class="hidden">
+        <canvas id="gameCanvas"></canvas>
+        <div id="ui-layer">
+            <div id="health-bar">
+                <div class="heart">❤️</div>
+            </div>
+            <div id="message-overlay" class="hidden">
+                <h2 id="end-title">Game Over</h2>
+                <button id="restart-btn">重新开始</button>
+            </div>
+
+            <!-- Mobile Controls -->
+            <div id="mobile-controls">
+                <div id="joystick-zone">
+                    <div id="joystick-base">
+                        <div id="joystick-stick"></div>
+                    </div>
+                </div>
+                <!-- The skill button will update its text based on drawn skill -->
+                <button id="action-btn">技能</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+
+</html>

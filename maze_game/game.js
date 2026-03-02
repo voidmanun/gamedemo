@@ -26,7 +26,7 @@ let playerRadius;
 
 let monsters = [];
 
-let basePathWidth = 70;
+let basePathWidth = 30;
 let PATH_WIDTH = 0;
 let BORDER_WIDTH = 0;
 let SAFE_WIDTH = 0;
