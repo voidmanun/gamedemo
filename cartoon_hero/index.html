@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Cartoon Hero</title>
+    <link rel="stylesheet" href="./style.css" />
+</head>
+
+<body>
+    <!-- Game Viewport -->
+    <div id="game-container">
+        <canvas id="game-canvas"></canvas>
+
+        <!-- Heads Up Display -->
+        <div id="hud">
+            <div class="hud-item hp-bar-container">
+                <div class="hp-bar" id="ui-hp-bar"></div>
+                <span id="ui-hp-text">40 / 40</span>
+            </div>
+            <div class="hud-stats">
+                <div class="hud-item resource-item" id="ui-trees">
+                    <span class="icon tree-icon">🌲</span>
+                    <span class="val">0</span>
+                </div>
+                <div class="hud-item resource-item" id="ui-ores">
+                    <span class="icon ore-icon">🪨</span>
+                    <span class="val">0</span>
+                </div>
+                <div class="hud-item weapon-item" id="ui-weapon">
+                    <span class="icon weapon-icon">🗡️</span>
+                    <span class="val">小刀 (Atk: 2)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upgrade Button -->
+        <button id="btn-upgrade" class="hidden">升级武器</button>
+
+        <!-- Virtual Joystick -->
+        <div id="joystick-zone">
+            <div id="joystick-base">
+                <div id="joystick-stick"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="./main.js"></script>
+</body>
+
+</html>
