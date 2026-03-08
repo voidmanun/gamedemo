@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voidman 的游戏中心</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e2f, #2a2a40);
+            color: white;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 40px;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .game-card h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: #4facfe;
+        }
+
+        .game-card p {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #bbb;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Voidman 的游戏中心 🎮</h1>
+    <div class="games-grid">
+        <a href="/block_survival/index.html" class="game-card">
+            <h2>方块生存 / Block Survival</h2>
+            <p>无限升级、挖矿与打怪的生存体验</p>
+        </a>
+        <a href="/cartoon_hero/index.html" class="game-card">
+            <h2>卡通英雄 / Cartoon Hero</h2>
+            <p>带有跟随者的高级卡通动作游戏</p>
+        </a>
+        <a href="/treasure_hunter/index.html" class="game-card">
+            <h2>寻宝者 / Treasure Hunter</h2>
+            <p>地牢探险寻宝游戏</p>
+        </a>
+        <a href="/maze_game/index.html" class="game-card">
+            <h2>迷宫游戏 / Maze Game</h2>
+            <p>复杂的逃生迷宫挑战</p>
+        </a>
+        <a href="/doodle_racing/index.html" class="game-card">
+            <h2>涂鸦赛车 / Doodle Racing</h2>
+            <p>休闲涂鸦风赛车</p>
+        </a>
+        <a href="/my_web_game/index.html" class="game-card">
+            <h2>我的网页游戏 / First Game</h2>
+            <p>初始 Web 游戏项目</p>
+        </a>
+    </div>
+</body>
+
+</html>
