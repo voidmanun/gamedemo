@@ -499,6 +499,24 @@ function mergeWeapons() {
     spawnDamageNumber(PLAYER.x, PLAYER.y, "没有可合成的武器!", false);
 }
 
+function switchWeapon() {
+    if (PLAYER.inventory.weapons.length === 0) {
+        spawnDamageNumber(PLAYER.x, PLAYER.y, "背包里没有武器!", false);
+        return;
+    }
+
+    if (PLAYER.equipped === null) {
+        PLAYER.equipped = 0;
+    } else {
+        PLAYER.equipped = (PLAYER.equipped + 1) % PLAYER.inventory.weapons.length;
+    }
+
+    updateHUD();
+    const w = PLAYER.inventory.weapons[PLAYER.equipped];
+    const wName = WEAPON_TYPES[w.type].name;
+    spawnDamageNumber(PLAYER.x, PLAYER.y, `切换到 ${w.level}级 ${wName}`, false);
+}
+
 // Restart Game
 document.getElementById('restart-btn').addEventListener('click', () => {
     PLAYER.hp = PLAYER.maxHp;
