@@ -118,6 +118,8 @@ canvas {
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     transition: all 0.2s ease;
+    pointer-events: auto;
+    /* MUST BE AUTO TO CATCH CLICKS */
 }
 
 .craft-btn:hover {

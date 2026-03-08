@@ -458,21 +458,35 @@ function craftWeapon(typeKey) {
 }
 
 function mergeWeapons() {
+    console.log("Merge clicked! Current weapons:", JSON.parse(JSON.stringify(PLAYER.inventory.weapons)));
+
     // Find two identical weapons
     for (let i = 0; i < PLAYER.inventory.weapons.length; i++) {
         for (let j = i + 1; j < PLAYER.inventory.weapons.length; j++) {
             const w1 = PLAYER.inventory.weapons[i];
             const w2 = PLAYER.inventory.weapons[j];
+
+            console.log(`Comparing [${i}] %o with [${j}] %o`, w1, w2);
+
             if (w1.type === w2.type && w1.level === w2.level) {
-                w1.level++;
-                PLAYER.inventory.weapons.splice(j, 1);
-                spawnDamageNumber(PLAYER.x, PLAYER.y, `Merged to Level ${w1.level}!`, false);
+                w1.level++; // Upgrade first weapon
+                PLAYER.inventory.weapons.splice(j, 1); // Remove second weapon
+
+                // If the player had the deleted weapon equipped, or had a weapon after it equipped, adjust index
+                if (PLAYER.equipped === j) {
+                    PLAYER.equipped = i; // Switch to the upgraded one
+                } else if (PLAYER.equipped > j) {
+                    PLAYER.equipped--; // Shift index down
+                }
+
+                console.log(`Merged! New upgraded weapon:`, w1);
+                spawnDamageNumber(PLAYER.x, PLAYER.y, `合成为 ${w1.level} 级!`, false);
                 updateHUD();
                 return;
             }
         }
     }
-    spawnDamageNumber(PLAYER.x, PLAYER.y, "Nothing to merge!", false);
+    spawnDamageNumber(PLAYER.x, PLAYER.y, "没有可合成的武器!", false);
 }
 
 // Restart Game
