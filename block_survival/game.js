@@ -130,7 +130,8 @@ function buildHouse(x, y) {
         y: (y + 1) * TILE_SIZE + TILE_SIZE / 2,
         width: 25, height: 25,
         color: '#e67e22',
-        name: '村民'
+        name: '村民',
+        hasInteracted: false
     });
 }
 generateWorld();
@@ -439,21 +440,30 @@ const WEAPON_TYPES = {
 
 function craftWeapon(typeKey) {
     const type = WEAPON_TYPES[typeKey];
-    if (PLAYER.inventory.wood >= type.wood &&
-        PLAYER.inventory.copper >= type.copper &&
-        PLAYER.inventory.silver >= type.silver &&
-        PLAYER.inventory.gold >= type.gold &&
-        PLAYER.inventory.diamond >= type.diamond) {
 
-        PLAYER.inventory.wood -= type.wood;
-        PLAYER.inventory.copper -= type.copper;
-        PLAYER.inventory.silver -= type.silver;
-        PLAYER.inventory.gold -= type.gold;
-        PLAYER.inventory.diamond -= type.diamond;
+    const reqWood = type.wood || 0;
+    const reqCopper = type.copper || 0;
+    const reqSilver = type.silver || 0;
+    const reqGold = type.gold || 0;
+    const reqDiamond = type.diamond || 0;
+
+    if (PLAYER.inventory.wood >= reqWood &&
+        PLAYER.inventory.copper >= reqCopper &&
+        PLAYER.inventory.silver >= reqSilver &&
+        PLAYER.inventory.gold >= reqGold &&
+        PLAYER.inventory.diamond >= reqDiamond) {
+
+        PLAYER.inventory.wood -= reqWood;
+        PLAYER.inventory.copper -= reqCopper;
+        PLAYER.inventory.silver -= reqSilver;
+        PLAYER.inventory.gold -= reqGold;
+        PLAYER.inventory.diamond -= reqDiamond;
 
         PLAYER.inventory.weapons.push({ type: typeKey, level: 1 });
         updateHUD();
-        spawnDamageNumber(PLAYER.x, PLAYER.y, `Crafted ${type.name}!`, false);
+        spawnDamageNumber(PLAYER.x, PLAYER.y, `合成了 ${type.name}!`, false);
+    } else {
+        spawnDamageNumber(PLAYER.x, PLAYER.y, "材料不足!", false);
     }
 }
 
@@ -611,16 +621,21 @@ function performAction(time) {
     for (let i = 0; i < VILLAGERS.length; i++) {
         let v = VILLAGERS[i];
         if (Math.hypot(PLAYER.x - v.x, PLAYER.y - v.y) < attackRange) {
-            // Heal player and give random ore
-            PLAYER.hp = PLAYER.maxHp;
-            const ores = ['copper', 'silver', 'gold', 'diamond'];
-            const randomOre = ores[Math.floor(Math.random() * ores.length)];
-            PLAYER.inventory[randomOre]++;
+            if (!v.hasInteracted) {
+                // Heal player and give random ore
+                PLAYER.hp = PLAYER.maxHp;
+                const ores = ['copper', 'silver', 'gold', 'diamond'];
+                const randomOre = ores[Math.floor(Math.random() * ores.length)];
+                PLAYER.inventory[randomOre]++;
 
-            const zhOre = { 'copper': '铜', 'silver': '银', 'gold': '金', 'diamond': '钻石' };
-            PARTICLES.push({ x: v.x, y: v.y - 20, text: `满血恢复 & +1 ${zhOre[randomOre]}!`, life: 2.0, color: '#f1c40f', vy: -15 });
+                const zhOre = { 'copper': '铜', 'silver': '银', 'gold': '金', 'diamond': '钻石' };
+                PARTICLES.push({ x: v.x, y: v.y - 20, text: `满血恢复 & +1 ${zhOre[randomOre]}!`, life: 2.0, color: '#f1c40f', vy: -15 });
 
-            updateHUD();
+                v.hasInteracted = true;
+                updateHUD();
+            } else {
+                PARTICLES.push({ x: v.x, y: v.y - 20, text: "我已经没什么能帮助你了", life: 2.0, color: '#ffffff', vy: -15 });
+            }
             actionDone = true;
             break;
         }
