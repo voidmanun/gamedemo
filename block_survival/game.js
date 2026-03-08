@@ -607,6 +607,27 @@ function performAction(time) {
 
     if (actionDone) return;
 
+    // 2.5 Try to interact with Villagers
+    for (let i = 0; i < VILLAGERS.length; i++) {
+        let v = VILLAGERS[i];
+        if (Math.hypot(PLAYER.x - v.x, PLAYER.y - v.y) < attackRange) {
+            // Heal player and give random ore
+            PLAYER.hp = PLAYER.maxHp;
+            const ores = ['copper', 'silver', 'gold', 'diamond'];
+            const randomOre = ores[Math.floor(Math.random() * ores.length)];
+            PLAYER.inventory[randomOre]++;
+
+            const zhOre = { 'copper': '铜', 'silver': '银', 'gold': '金', 'diamond': '钻石' };
+            PARTICLES.push({ x: v.x, y: v.y - 20, text: `满血恢复 & +1 ${zhOre[randomOre]}!`, life: 2.0, color: '#f1c40f', vy: -15 });
+
+            updateHUD();
+            actionDone = true;
+            break;
+        }
+    }
+
+    if (actionDone) return;
+
     // 3. Try to mine
     let closestTile = null;
     let minDistance = 80; // max gathering range
