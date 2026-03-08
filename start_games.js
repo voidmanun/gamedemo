@@ -33,6 +33,13 @@ const server = http.createServer((request, response) => {
     // Default to game hub
     let filePath = path.join(PUBLIC_DIR, pathname === '/' ? 'index.html' : pathname);
 
+    // If the path is a directory (like /maze_game/), try serving its index.html
+    try {
+        if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) {
+            filePath = path.join(filePath, 'index.html');
+        }
+    } catch (e) { }
+
     // Get the file extension
     const extname = String(path.extname(filePath)).toLowerCase();
     let contentType = mimeTypes[extname] || 'application/octet-stream';
