@@ -201,44 +201,61 @@ class Character extends Entity {
         ctx.translate(this.x, this.y);
         if (!this.facingRight) ctx.scale(-1, 1);
 
-        // Draw body (Cartoon Person)
-        const bodyPath = "M-10,0 Q-10,-20 0,-20 Q10,-20 10,0 L10,15 Q10,25 0,25 Q-10,25 -10,15 Z";
-        drawSvgPath(ctx, bodyPath, 0, 0, 1, '#fbc531');
+        // Minecraft style blocky body
+        // Feet
+        ctx.fillStyle = '#1B1464'; // Dark blue pants
+        ctx.fillRect(-10, 10, 8, 10);
+        ctx.fillRect(2, 10, 8, 10);
 
-        // Draw eyes
-        drawSvgPath(ctx, "M3,-10 A2,2 0 1,0 7,-10 A2,2 0 1,0 3,-10", 0, 0, 1, 'white', null);
-        drawSvgPath(ctx, "M5,-10 A1,1 0 1,0 6,-10 A1,1 0 1,0 5,-10", 0, 0, 1, 'black', null);
+        // Body
+        ctx.fillStyle = this.isPlayer ? '#00A8FF' : '#44bd32'; // Cyan shirt for player, green for followers
+        ctx.fillRect(-10, -10, 20, 20);
 
-        // Feather (only for player)
+        // Head
+        ctx.fillStyle = '#fbc531'; // Skin color
+        ctx.fillRect(-10, -28, 18, 18);
+
+        // Face
+        ctx.fillStyle = 'rgba(0,0,0,0.3)';
+        ctx.fillRect(0, -20, 4, 3); // Eye
+        ctx.fillRect(4, -20, 4, 3); // Eye
+        ctx.fillStyle = '#8e44ad';
         if (this.isPlayer) {
-            const featherPath = "M0,-20 Q5,-35 15,-40 Q5,-30 0,-20";
-            drawSvgPath(ctx, featherPath, 0, 0, 1, '#ff4757');
+            // Cap or something
+            ctx.fillStyle = '#ff4757';
+            ctx.fillRect(-10, -28, 18, 4);
         }
 
         // Weapon
+        ctx.save();
         if (this.weaponSwingTimer > 0) {
-            ctx.rotate(Math.PI / 4);
+            ctx.rotate(-Math.PI / 4);
         }
 
-        let wPath = "";
         let wColor = "#bdc3c7";
+        let length = 20;
         switch (state.weaponLevel) {
-            case 0: // 小刀
-                wPath = "M10,0 L25,0 L20,-5 L10,-5 Z"; wColor = "#95a5a6"; break;
-            case 1: // 宝剑
-                wPath = "M10,0 L35,0 L30,-10 L10,-10 Z M15,-15 L15,5"; wColor = "#3498db"; break;
-            case 2: // 青龙偃月刀
-                wPath = "M-10,0 L40,0 M30,-15 Q45,-15 50,0 Q35,5 30,-5 Z"; wColor = "#2ecc71"; break;
-            case 3: // 方天戟
-                wPath = "M-10,0 L50,0 M40,-15 L40,15 M45,-10 A10,10 0 0,0 45,10"; wColor = "#e74c3c"; break;
+            case 0: wColor = "#95a5a6"; length = 15; break;
+            case 1: wColor = "#3498db"; length = 25; break;
+            case 2: wColor = "#2ecc71"; length = 35; break;
+            case 3: wColor = "#e74c3c"; length = 40; break;
         }
-        drawSvgPath(ctx, wPath, 0, 0, 1, wColor);
 
+        // Draw pixelated sword
+        ctx.fillStyle = '#7f8c8d'; // Handle
+        ctx.fillRect(8, -2, 4, 4);
+        ctx.fillStyle = wColor;
+        ctx.fillRect(12, -2, length, 4);
+        // Crossguard
+        ctx.fillStyle = '#34495e';
+        ctx.fillRect(10, -8, 2, 16);
+
+        ctx.restore();
         ctx.restore();
 
         // Draw HP
         if (this.isPlayer && this.hp < this.maxHp) {
-            drawHpBar(ctx, this.x, this.y - 35, this.hp, this.maxHp);
+            drawHpBar(ctx, this.x, this.y - 45, this.hp, this.maxHp);
         }
     }
 }
@@ -275,27 +292,33 @@ class Monster extends Entity {
         // Attack player
         this.attackTimer -= dt;
         if (d < 30 && this.attackTimer <= 0) {
-            state.player.hp -= 2; // Monster attack is fixed or so... Wait, rules didn't say, I'll set it to 2.
+            state.player.hp -= 2;
             this.attackTimer = 1.0;
             state.particles.push(new DamageText(state.player.x, state.player.y - 20, 2, '#ff4757'));
         }
     }
 
     draw(ctx) {
-        // Orange Rectangle
-        ctx.fillStyle = '#e67e22';
-        ctx.strokeStyle = '#d35400';
-        ctx.lineWidth = 2;
-        ctx.fillRect(this.x - 15, this.y - 25, 30, 50);
-        ctx.strokeRect(this.x - 15, this.y - 25, 30, 50);
+        // Creeper/Zombie style blocky entity
+        ctx.save();
+        ctx.translate(this.x, this.y);
 
-        // Eyes
+        // Body
+        ctx.fillStyle = '#44bd32'; // Green
+        ctx.fillRect(-12, -25, 24, 50);
+
+        // Face
         ctx.fillStyle = 'black';
-        ctx.fillRect(this.x - 8, this.y - 15, 4, 4);
-        ctx.fillRect(this.x + 4, this.y - 15, 4, 4);
+        ctx.fillRect(-6, -18, 4, 4); // Left eye
+        ctx.fillRect(2, -18, 4, 4);  // Right eye
+        ctx.fillRect(-2, -10, 4, 8); // "Mouth"
+        ctx.fillRect(-4, -4, 2, 4);
+        ctx.fillRect(2, -4, 2, 4);
+
+        ctx.restore();
 
         if (this.hp < this.maxHp) {
-            drawHpBar(ctx, this.x, this.y - 35, this.hp, this.maxHp);
+            drawHpBar(ctx, this.x, this.y - 40, this.hp, this.maxHp);
         }
     }
 }
@@ -310,18 +333,31 @@ class Resource extends Entity {
     }
 
     draw(ctx) {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+
         if (this.type === 'tree') {
-            // Tree SVG
-            drawSvgPath(ctx, "M-5,10 L5,10 L5,0 L-5,0 Z", this.x, this.y, 1, '#8e44ad'); // Trunk
-            drawSvgPath(ctx, "M0,-25 L15,0 L-15,0 Z", this.x, this.y, 1, '#27ae60'); // Top
-            drawSvgPath(ctx, "M0,-15 L20,5 L-20,5 Z", this.x, this.y, 1, '#2ecc71'); // Bottom
+            // Minecraft Tree
+            // Trunk
+            ctx.fillStyle = '#5d4037';
+            ctx.fillRect(-8, 0, 16, 25);
+            // Leaves (blocky)
+            ctx.fillStyle = '#2e7d32';
+            ctx.fillRect(-20, -30, 40, 40);
+            ctx.fillStyle = '#388e3c';
+            ctx.fillRect(-15, -25, 30, 30);
         } else {
-            // Ore SVG
-            const orePath = "M-10,5 L0,-10 L15,-5 L10,15 L-5,10 Z";
-            drawSvgPath(ctx, orePath, this.x, this.y, 1, '#7f8c8d', '#2c3e50');
-            // Sparkle
-            drawSvgPath(ctx, "M0,0 M2,-2 L4,-4 M-2,-2 L-4,-4 M2,2 L4,4 M-2,2 L-4,4", this.x - 5, this.y - 5, 1, null, '#f1c40f');
+            // Minecraft Ore Block
+            ctx.fillStyle = '#757575'; // Stone
+            ctx.fillRect(-15, -15, 30, 30);
+            // Specks
+            ctx.fillStyle = '#ffeb3b'; // Goldish/Ore color
+            ctx.fillRect(-8, -8, 4, 4);
+            ctx.fillRect(4, 2, 5, 5);
+            ctx.fillRect(-10, 5, 3, 3);
+            ctx.fillRect(5, -10, 4, 4);
         }
+        ctx.restore();
     }
 }
 
@@ -515,28 +551,32 @@ function update(dt) {
 }
 
 function drawBackground() {
-    ctx.fillStyle = '#7DAF6C';
+    ctx.fillStyle = '#5d914d'; // Darker grass
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     ctx.save();
     ctx.translate(-state.camera.x, -state.camera.y);
 
+    // Blocky Grass Pattern (Checkerboard)
+    const blockSize = 50;
+    const startX = Math.floor(state.camera.x / blockSize) * blockSize;
+    const startY = Math.floor(state.camera.y / blockSize) * blockSize;
+    const endX = state.camera.x + canvas.width + blockSize;
+    const endY = state.camera.y + canvas.height + blockSize;
+
+    for (let x = startX; x < endX; x += blockSize) {
+        for (let y = startY; y < endY; y += blockSize) {
+            if ((Math.floor(x / blockSize) + Math.floor(y / blockSize)) % 2 === 0) {
+                ctx.fillStyle = '#7DAF6C'; // Lighter grass
+                ctx.fillRect(x, y, blockSize, blockSize);
+            }
+        }
+    }
+
     // Map boundaries
-    ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+    ctx.strokeStyle = '#2d4d22';
     ctx.lineWidth = 10;
     ctx.strokeRect(0, 0, GAME_SIZE, GAME_SIZE);
-
-    // Grid
-    ctx.strokeStyle = 'rgba(0,0,0,0.05)';
-    ctx.lineWidth = 2;
-    const startX = Math.floor(state.camera.x / 100) * 100;
-    const startY = Math.floor(state.camera.y / 100) * 100;
-    for (let x = startX; x < state.camera.x + canvas.width; x += 100) {
-        ctx.beginPath(); ctx.moveTo(x, state.camera.y); ctx.lineTo(x, state.camera.y + canvas.height); ctx.stroke();
-    }
-    for (let y = startY; y < state.camera.y + canvas.height; y += 100) {
-        ctx.beginPath(); ctx.moveTo(state.camera.x, y); ctx.lineTo(state.camera.x + canvas.width, y); ctx.stroke();
-    }
 
     // Entities
     const inView = (e) => (

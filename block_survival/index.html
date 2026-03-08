@@ -6,6 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>闹闹的游戏</title>
     <link rel="stylesheet" href="style.css">
+    <script>
+        window.onerror = function (msg, url, line, col, error) {
+            let errDiv = document.getElementById("debug-err");
+            if (!errDiv) {
+                errDiv = document.createElement("div");
+                errDiv.id = "debug-err";
+                errDiv.style.position = "absolute";
+                errDiv.style.top = "100px";
+                errDiv.style.left = "50px";
+                errDiv.style.color = "red";
+                errDiv.style.backgroundColor = "black";
+                errDiv.style.zIndex = "9999";
+                errDiv.style.fontSize = "24px";
+                errDiv.style.border = "5px solid red";
+                document.body.appendChild(errDiv);
+            }
+            errDiv.innerHTML += msg + " at " + line + ":" + col + "<br>";
+        };
+    </script>
 </head>
 
 <body>
@@ -16,11 +35,28 @@
                 <div id="health-bar">
                     <div id="health-fill"></div>
                 </div>
-                <div id="inventory">Wood: <span id="wood-count">0</span></div>
+                <div id="stats">等级: <span id="player-level">1</span> | 经验: <span id="player-xp">0</span>/<span
+                        id="player-max-xp">100</span></div>
+                <div id="inventory">
+                    木头: <span id="wood-count">0</span> |
+                    铜: <span id="copper-count">0</span> |
+                    银: <span id="silver-count">0</span> |
+                    金: <span id="gold-count">0</span> |
+                    钻石: <span id="diamond-count">0</span>
+                </div>
             </div>
 
             <div id="crafting-menu">
-                <button id="craft-sword-btn" class="craft-btn">Craft Sword (5 Wood)</button>
+                <button onclick="craftWeapon('WOOD_SWORD')" class="craft-btn">木剑 (5木)</button>
+                <button onclick="craftWeapon('COPPER_SWORD')" class="craft-btn">铜剑 (10铜)</button>
+                <button onclick="craftWeapon('SILVER_SWORD')" class="craft-btn">银剑 (8银)</button>
+                <button onclick="craftWeapon('GOLD_SWORD')" class="craft-btn">金剑 (6金)</button>
+                <button onclick="craftWeapon('DIAMOND_SWORD')" class="craft-btn">钻石剑 (4钻)</button>
+                <button onclick="mergeWeapons()" class="craft-btn" style="background: #9b59b6">合成同级武器</button>
+            </div>
+            <div id="weapon-slots">
+                <!-- Equipped weapon display -->
+                已装备: <span id="env-weapon">无</span>
             </div>
 
             <!-- Mobile Controls -->
@@ -31,16 +67,16 @@
             </div>
 
             <div id="action-zone">
-                <button id="action-btn" class="control-btn">Mine/Attack</button>
+                <button id="action-btn" class="control-btn">挖矿/攻击</button>
             </div>
         </div>
         <div id="game-over-screen" class="hidden">
-            <h1>Game Over</h1>
-            <p>You survived for a while.</p>
-            <button id="restart-btn">Restart Game</button>
+            <h1>游戏结束</h1>
+            <p>你生存了一段时间。</p>
+            <button id="restart-btn">重新开始</button>
         </div>
     </div>
-    <script src="game.js"></script>
+    <script src="game.js?v=2"></script>
 </body>
 
 </html>
