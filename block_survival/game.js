@@ -650,6 +650,10 @@ function performAction(time) {
             PARTICLES.push({ x: tileCenterX, y: tileCenterY, text: tile === TILES.STONE ? "击碎石头" : `+1 ${res}`, life: 1.0, color: color, vy: -20 });
             actionDone = true;
         }
+
+        if (actionDone) {
+            updateHUD();
+        }
     }
 }
 
