@@ -608,36 +608,48 @@ function performAction(time) {
     if (actionDone) return;
 
     // 3. Try to mine
-    for (let y = pTY - 1; y <= pTY + 1; y++) {
-        for (let x = pTX - 1; x <= pTX + 1; x++) {
+    let closestTile = null;
+    let minDistance = 80; // max gathering range
+
+    for (let y = pTY - 2; y <= pTY + 2; y++) {
+        for (let x = pTX - 2; x <= pTX + 2; x++) {
             if (x >= 0 && x < MAP_COLS && y >= 0 && y < MAP_ROWS) {
                 const tile = WORLD[CURRENT_LAYER][y][x];
+
+                // Skip unminable tiles
+                if (![TILES.TREE, TILES.COPPER, TILES.SILVER, TILES.GOLD, TILES.DIAMOND, TILES.STONE].includes(tile)) continue;
+
                 const tileCenterX = x * TILE_SIZE + TILE_SIZE / 2;
                 const tileCenterY = y * TILE_SIZE + TILE_SIZE / 2;
+                const dist = Math.hypot(PLAYER.x - tileCenterX, PLAYER.y - tileCenterY);
 
-                if (Math.hypot(PLAYER.x - tileCenterX, PLAYER.y - tileCenterY) < 80) {
-                    if (tile === TILES.TREE) {
-                        WORLD[CURRENT_LAYER][y][x] = TILES.GRASS;
-                        PLAYER.inventory.wood += 1;
-                        PARTICLES.push({ x: tileCenterX, y: tileCenterY, text: "+1 Wood", life: 1.0, color: '#8e44ad', vy: -20 });
-                        actionDone = true;
-                    } else if ([TILES.COPPER, TILES.SILVER, TILES.GOLD, TILES.DIAMOND, TILES.STONE].includes(tile)) {
-                        let res = "Stone";
-                        let color = "#7f8c8d";
-                        if (tile === TILES.COPPER) { res = "Copper"; color = "#d35400"; PLAYER.inventory.copper++; }
-                        else if (tile === TILES.SILVER) { res = "Silver"; color = "#bdc3c7"; PLAYER.inventory.silver++; }
-                        else if (tile === TILES.GOLD) { res = "Gold"; color = "#f1c40f"; PLAYER.inventory.gold++; }
-                        else if (tile === TILES.DIAMOND) { res = "Diamond"; color = "#00e5ff"; PLAYER.inventory.diamond++; }
-
-                        WORLD[CURRENT_LAYER][y][x] = (CURRENT_LAYER === LAYERS.SURFACE) ? TILES.GRASS : TILES.DIRT;
-                        PARTICLES.push({ x: tileCenterX, y: tileCenterY, text: `+1 ${res}`, life: 1.0, color: color, vy: -20 });
-                        actionDone = true;
-                    }
-                    if (actionDone) break;
+                if (dist < minDistance) {
+                    closestTile = { x, y, tile, tileCenterX, tileCenterY };
+                    minDistance = dist;
                 }
             }
         }
-        if (actionDone) break;
+    }
+
+    if (closestTile) {
+        const { x, y, tile, tileCenterX, tileCenterY } = closestTile;
+        if (tile === TILES.TREE) {
+            WORLD[CURRENT_LAYER][y][x] = TILES.GRASS;
+            PLAYER.inventory.wood += 1;
+            PARTICLES.push({ x: tileCenterX, y: tileCenterY, text: "+1 木头", life: 1.0, color: '#8e44ad', vy: -20 });
+            actionDone = true;
+        } else {
+            let res = "石头";
+            let color = "#7f8c8d";
+            if (tile === TILES.COPPER) { res = "铜"; color = "#d35400"; PLAYER.inventory.copper++; }
+            else if (tile === TILES.SILVER) { res = "银"; color = "#bdc3c7"; PLAYER.inventory.silver++; }
+            else if (tile === TILES.GOLD) { res = "金"; color = "#f1c40f"; PLAYER.inventory.gold++; }
+            else if (tile === TILES.DIAMOND) { res = "钻石"; color = "#00e5ff"; PLAYER.inventory.diamond++; }
+
+            WORLD[CURRENT_LAYER][y][x] = (CURRENT_LAYER === LAYERS.SURFACE) ? TILES.GRASS : TILES.DIRT;
+            PARTICLES.push({ x: tileCenterX, y: tileCenterY, text: tile === TILES.STONE ? "击碎石头" : `+1 ${res}`, life: 1.0, color: color, vy: -20 });
+            actionDone = true;
+        }
     }
 }
 
